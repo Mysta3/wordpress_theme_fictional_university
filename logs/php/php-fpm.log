@@ -35,3 +35,10 @@
 [17-Aug-2020 08:33:35] NOTICE: exiting, bye-bye!
 [18-Aug-2020 07:01:50] NOTICE: fpm is running, pid 2432
 [18-Aug-2020 07:01:50] NOTICE: ready to handle connections
+[18-Aug-2020 08:24:21] NOTICE: Terminating ...
+[18-Aug-2020 08:24:21] NOTICE: Terminating ...
+[18-Aug-2020 08:24:21] NOTICE: exiting, bye-bye!
+[19-Aug-2020 06:00:54] NOTICE: fpm is running, pid 1167
+[19-Aug-2020 06:00:54] NOTICE: ready to handle connections
+[19-Aug-2020 06:00:55] WARNING: [pool www] child 1177 exited on signal 11 (SIGSEGV) after 1.155347 seconds from start
+[19-Aug-2020 06:00:55] NOTICE: [pool www] child 1187 started
