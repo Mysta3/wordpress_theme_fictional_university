@@ -1,5 +1,8 @@
 <?php
 
+//UNIVERSITY FILES
+
+// -------------------------------
 //add styles & scripts to pages function
 function university_files()
 {
@@ -14,14 +17,43 @@ function university_files()
         wp_enqueue_style('our-main-styles', get_theme_file_uri('/bundled-assets/styles.e514aaae8003cfbdaea0.css'));
     }
 }
-
 //generates scripts and uses hooks
 add_action('wp_enqueue_scripts', 'university_files'); //calls function
+// -------------------------------
 
+// UNIVERSITY FEATURES
+
+// -------------------------------
+//create function
 function university_features()
 {
     add_theme_support('title-tag');
 }
+//call function
 add_action('after_setup_theme', 'university_features');
+// -------------------------------
 
+//UNIVERSITY ADJUST QUERIES
 
+// -------------------------------
+function university_adjust_queries($query)
+{
+    $today = date('Ymd'); //today's date
+    if (!is_admin() and is_post_type_archive('event') and $query->is_main_query()) {
+        $query->set('meta_key', 'event_date');
+        $query->set('orderby', 'meta_value_num');
+        $query->set('order', 'ASC');
+        $query->set('meta_query', array( //only show post where
+            array(
+                'key' => 'event_date', //event date
+                'compare' => '>=', //is greater than or equal to
+                'value' => $today, //today's date
+                'type' => 'numeric' //specify types of values to look for.
+            )
+        ));
+
+    }
+}
+
+add_action('pre_get_posts', 'university_adjust_queries');
+// -------------------------------

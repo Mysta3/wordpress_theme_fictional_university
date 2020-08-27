@@ -15,10 +15,22 @@
         <div class="full-width-split__inner">
             <h2 class="headline headline--small-plus t-center">Upcoming Events</h2>
             <?php
+            $today = date('Ymd');
             //Custom Query for event posts
             $homepageEvents = new WP_Query(array(
-                'posts_per_page' => 2,
-                'post_type' => 'event'
+                'posts_per_page' => 2, //-1 returns everything that meets the query.
+                'post_type' => 'event',
+                'meta_key' => 'event_date', //describes the meta key to look for
+                'orderby' => 'meta_value_num', //tell wp to order by meta value
+                'order' => 'ASC',
+                'meta_query' => array( //only show post where
+                    array(
+                        'key' => 'event_date', //event date
+                        'compare' => '>=', //is greater than or equal to
+                        'value' => $today, //today's date
+                        'type' => 'numeric' //specify types of values to look for.
+                    )
+                )
             ));
 
             while ($homepageEvents->have_posts()) { //repeats as long as posts are there
