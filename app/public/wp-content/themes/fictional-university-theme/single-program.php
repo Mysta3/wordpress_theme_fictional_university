@@ -25,8 +25,61 @@ while (have_posts()) {
         </div>
 
         <div class="generic-content">
-            <?php the_content()  ?>s
+            <?php the_content();  ?>
         </div>
+
+        <?php
+        $today = date('Ymd');
+        //Custom Query for 2 most rapidly approaching upcoming event posts
+        $homepageEvents = new WP_Query(array(
+            'posts_per_page' => 2, //-1 returns everything that meets the query.
+            'post_type' => 'event',
+            'meta_key' => 'event_date', //describes the meta key to look for
+            'orderby' => 'meta_value_num', //tell wp to order by meta value
+            'order' => 'ASC',
+            'meta_query' => array( //only show post where
+                array(
+                    'key' => 'event_date', //event date
+                    'compare' => '>=', //is greater than or equal to
+                    'value' => $today, //today's date
+                    'type' => 'numeric' //specify types of values to look for.
+                ),
+                array(
+                    'key' => 'related_programs',
+                    'compare' => 'LIKE',
+                    'value' => '"' . get_the_ID() . '"'
+                )
+            )
+        ));
+
+        if ($homepageEvents->have_posts()) {
+            echo '<hr class="section-break"/>';
+            echo '<h2 class="headline headline--medium">Upcoming ' . get_the_title() . ' Events</h2>';
+
+            while ($homepageEvents->have_posts()) { //repeats as long as posts are there
+                $homepageEvents->the_post(); //gets data ready for each post
+        ?>
+                <div class="event-summary">
+                    <a class="event-summary__date t-center" href="#">
+                        <span class="event-summary__month"><?php
+                                                            $eventDate = new DateTime(get_field('event_date'));
+                                                            echo $eventDate->format('M');
+                                                            ?></span>
+                        <span class="event-summary__day"><?php echo $eventDate->format('d'); ?></span>
+                    </a>
+                    <div class="event-summary__content">
+                        <h5 class="event-summary__title headline headline--tiny"><a href="<?php the_permalink() ?>"><?php the_title() ?></a></h5>
+                        <p><?php if (has_excerpt()) {
+                                echo  get_the_excerpt();
+                            } else {
+                                echo wp_trim_words(get_the_content(), 18);
+                            } ?><a href="<?php the_permalink() ?>" class="nu gray">Learn more</a></p>
+                    </div>
+                </div>
+        <?php  }
+        }
+
+        ?>
 
     </div>
 
