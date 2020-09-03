@@ -30,8 +30,9 @@ function university_features()
     add_theme_support('title-tag');
     add_theme_support('post-thumbnails');
 
-    add_image_size('professorLandscape', 400, 260, false);//args('nickname', width, height, cro)
+    add_image_size('professorLandscape', 400, 260, false); //args('nickname', width, height, crop) crop can be true,false, or array
     add_image_size('professorPortrait', 480, 650, false);
+    add_image_size('pageBanner', 1500, 350, true);
 }
 //call function
 add_action('after_setup_theme', 'university_features');
