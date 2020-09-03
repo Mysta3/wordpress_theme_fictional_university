@@ -29,6 +29,46 @@ while (have_posts()) {
         </div>
 
         <?php
+        $relatedProfessors = new WP_Query(array(
+            'posts_per_page' => 2, //-1 returns everything that meets the query.
+            'post_type' => 'professor',
+            'orderby' => 'title',
+            'order' => 'ASC',
+            'meta_query' => array( //only show post where
+                array(
+                    'key' => 'related_programs',
+                    'compare' => 'LIKE',
+                    'value' => '"' . get_the_ID() . '"'
+                )
+            )
+        ));
+
+        if ($relatedProfessors->have_posts()) {
+            echo '<hr class="section-break"/>';
+            echo '<h2 class="headline headline--medium">' . get_the_title() . ' Professors</h2>';
+
+
+            echo '<ul class="professor-cards">';
+            while ($relatedProfessors->have_posts()) { //repeats as long as posts are there
+                $relatedProfessors->the_post(); //gets data ready for each post
+        ?>
+                <li class="professor-card__list-item">
+                    <a class="professor-card" href="<?php the_permalink() ?>">
+                        <img class="professor-card__image" src="<?php the_post_thumbnail_url() ?>" alt="">
+                        <span class="professor-card__name">
+                            <?php the_title();  ?>
+                        </span>
+                    </a>
+                </li>
+            <?php  }
+
+            echo '</ul>';
+        }
+
+        wp_reset_postdata(); //run in between 2 queries
+        //  *********************************************
+
+
         $today = date('Ymd');
         //Custom Query for 2 most rapidly approaching upcoming event posts
         $homepageEvents = new WP_Query(array(
@@ -58,7 +98,7 @@ while (have_posts()) {
 
             while ($homepageEvents->have_posts()) { //repeats as long as posts are there
                 $homepageEvents->the_post(); //gets data ready for each post
-        ?>
+            ?>
                 <div class="event-summary">
                     <a class="event-summary__date t-center" href="#">
                         <span class="event-summary__month"><?php
